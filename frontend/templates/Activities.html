@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIRTUAERO - Activities</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* Animated Background Balls */
+    #animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+    .ball {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.6;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      animation: floatUp 6s linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) translateX(0) scale(1); }
+      50% { transform: translateY(50vh) translateX(calc(50vw * var(--direction))) scale(1.2); }
+      100% { transform: translateY(-10vh) translateX(calc(100vw * var(--direction))) scale(1); }
+    }
+    /* Leaderboard Section */
+    .leaderboard {
+      padding: 100px 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      margin: 40px auto;
+      max-width: 1200px;
+      opacity: 0;
+      animation: fadeInSection 1s ease-in-out forwards;
+    }
+    .leaderboard h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 40px;
+      color: #702963;
+      text-align: center;
+      margin-bottom: 50px;
+      position: relative;
+      overflow: hidden;
+    }
+    .leaderboard h2::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, #702963, #5F9EA0);
+      animation: slideBorder 2s infinite alternate;
+    }
+    @keyframes slideBorder {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .table-container {
+      overflow-x: auto;
+      max-height: 600px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      color: #686868;
+    }
+    th, td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    th {
+      background: linear-gradient(135deg, #5F9EA0, #953553);
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    tr {
+      opacity: 0;
+      animation: fadeInRow 0.8s ease-in-out forwards;
+    }
+    tr:nth-child(1) { animation-delay: 0.1s; }
+    tr:nth-child(2) { animation-delay: 0.2s; }
+    tr:nth-child(3) { animation-delay: 0.3s; }
+    tr:nth-child(4) { animation-delay: 0.4s; }
+    tr:nth-child(5) { animation-delay: 0.5s; }
+    tr:nth-child(6) { animation-delay: 0.6s; }
+    tr:nth-child(7) { animation-delay: 0.7s; }
+    tr:nth-child(8) { animation-delay: 0.8s; }
+    tr:nth-child(9) { animation-delay: 0.9s; }
+    tr:nth-child(10) { animation-delay: 1.0s; }
+    @keyframes fadeInRow {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    tr:hover {
+      background: rgba(95, 158, 160, 0.1);
+      transform: scale(1.01);
+      transition: all 0.3s;
+    }
+    .rank {
+      font-weight: 700;
+      color: #702963;
+      background: rgba(207, 159, 255, 0.2);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      margin: 0 auto;
+    }
+    .name {
+      color: #953553;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .name:hover {
+      color: #5F9EA0;
+      cursor: pointer;
+    }
+    .appointment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .status-eligible {
+      color: #28a745;
+      font-weight: 700;
+    }
+    .status-not-eligible {
+      color: #dc3545;
+      font-weight: 700;
+    }
+    .book-btn, .view-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.3s, background 0.3s;
+      position: relative;
+    }
+    .book-btn {
+      background: #5F9EA0;
+      color: white;
+    }
+    .book-btn:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    .view-btn {
+      background: #702963;
+      color: white;
+    }
+    .book-btn:hover:not(:disabled), .view-btn:hover {
+      transform: scale(1.1);
+      animation: pulse 1s infinite;
+    }
+    .book-btn.loading::after, .view-btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 3px solid #fff;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      top: 50%;
+      right: 8px;
+      transform: translateY(-50%);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1.1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1.1); }
+    }
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+    /* Scroll-Triggered Animation */
+    @keyframes fadeInSection {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .leaderboard { padding: 80px 15px; margin: 20px auto; }
+      .leaderboard h2 { font-size: 32px; }
+      th, td { padding: 10px; font-size: 14px; }
+      th { font-size: 16px; }
+      .rank { width: 30px; height: 30px; line-height: 30px; font-size: 14px; }
+      .name { font-size: 14px; }
+      .book-btn, .view-btn { padding: 6px 12px; font-size: 12px; }
+      .appointment { flex-direction: column; gap: 5px; }
+      .table-container { max-height: 500px; }
+    }
+    @media (max-width: 480px) {
+      .leaderboard h2 { font-size: 28px; }
+      th, td { font-size: 12px; }
+      .rank { width: 25px; height: 25px; line-height: 25px; font-size: 12px; }
+      .book-btn, .view-btn { padding: 5px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <img src="static/img/img1.png" class="logo" alt="Logo" />
+    <div class="hamburger-button" onclick="toggleMenu()">☰</div>
+    <div class="navigation" id="navbar">
+      <a href="/">Home</a>
+      <a href="/results">Results</a>
+      <a href="/Activities" class="active">Activities</a> 
+      <a href="/About">About</a> 
+    </div>
+  </nav>
+
+  <div id="animated-bg"></div>
+
+  <section class="leaderboard">
+    <h2>Leaderboard</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Ranking</th>
+            <th>Name</th>
+            <th>Upcoming Slots</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="rank">1</span></td>
+            <td class="name">Aarav Patel</td>
+            <td class="appointment">
+              <span class="status-eligible">Eligible</span>
+              <button class="book-btn" onclick="bookAppointment(1)">Book</button>
+            </td>
+            <td><button class="view-btn" onclick="viewResult(1)">View Now</button></td>
+          </tr>
+          <tr>
+            <td><span class="rank">2</span></td>
+            <td class="name">Priya Sharma</td>
+            <td class="appointment">
+              <span class="status-eligible">Eligible</span>
+              <button class="book-btn" onclick="bookAppointment(2)">Book</button>
+            </td>
+            <td><button class="view-btn" onclick="viewResult(2)">View Now</button></td>
+          </tr>
+          <tr>
+            <td><span class="rank">3</span></td>
+            <td class="name">Vikram Singh</td>
+            <td class="appointment">
+              <span class="status-not-eligible">Not Eligible</span>
+              <button class="book-btn" disabled>Book</button>
+            </td>
+            <td><button class="view-btn" onclick="viewResult(3)">View Now</button></td>
+          </tr>
+          <tr>
+            <td><span class="rank">4</span></td>
+            <td class="name">Ananya Gupta</td>
+            <td class="appointment">
+              <span class="status-eligible">Eligible</span>
+              <button class="book-btn" onclick="bookAppointment(4)">Book</button>
+            </td>
+            <td><button class="view-btn" onclick="viewResult(4)">View Now</button></td>
+          </tr>
+          <tr>
+            <td><span class="rank">5</span></td>
+            <td class="name">Rahul Verma</td>
+            <td class="appointment">
+              <span class="status-not-eligible">Not Eligible</span>
+              <button class="book-btn" disabled>Book</button>
+            </td>
+            <td><button class="view-btn" onclick="viewResult(5)">View Now</button></td>
+          </tr>
+          <tr>
+            <td><span class="rank">6</span></td>
+            <td class="name">Sneha Reddy</td>
+            <td class="appointment">
+              <span class="status-eligible">Eligible</span>
+              <button class="book-btn" onclick="bookAppointment(6)">Book</button>
+            </td>
+            <td><button class="view-btn" onclick="viewResult(6)">View Now</button></td>
+          </tr>
+          <tr>
+            <td><span class="rank">7</span></td>
+            <td class="name">Karan Malhotra</td>
+            <td class="appointment">
+              <span class="status-eligible">Eligible</span>
+              <button class="book-btn" onclick="bookAppointment(7)">Book</button>
+            </td>
+            <td><button class="view-btn" onclick="viewResult(7)">View Now</button></td>
+          </tr>
+          <tr>
+            <td><span class="rank">8</span></td>
+            <td class="name">Meera Nair</td>
+            <td class="appointment">
+              <span class="status-not-eligible">Not Eligible</span>
+              <button class="book-btn" disabled>Book</button>
+            </td>
+            <td><button class="view-btn" onclick="viewResult(8)">View Now</button></td>
+          </tr>
+          <tr>
+            <td><span class="rank">9</span></td>
+            <td class="name">Arjun Desai</td>
+            <td class="appointment">
+              <span class="status-eligible">Eligible</span>
+              <button class="book-btn" onclick="bookAppointment(9)">Book</button>
+            </td>
+            <td><button class="view-btn" onclick="viewResult(9)">View Now</button></td>
+          </tr>
+          <tr>
+            <td><span class="rank">10</span></td>
+            <td class="name">Nisha Kapoor</td>
+            <td class="appointment">
+              <span class="status-not-eligible">Not Eligible</span>
+              <button class="book-btn" disabled>Book</button>
+            </td>
+            <td><button class="view-btn" onclick="viewResult(10)">View Now</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script src="static/js/script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const ballContainer = document.getElementById("animated-bg");
+      for (let i = 0; i < 15; i++) {
+        let ball = document.createElement("div");
+        ball.classList.add("ball");
+        let size = Math.random() * 50 + 10;
+        ball.style.width = `${size}px`;
+        ball.style.height = `${size}px`;
+        ball.style.left = `${Math.random() * 100}vw`;
+        ball.style.backgroundColor = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.8)`;
+        ball.style.animationDuration = `${Math.random() * 5 + 3}s`;
+        ball.style.setProperty('--direction', Math.random() > 0.5 ? '1' : '-1');
+        ballContainer.appendChild(ball);
+      }
+    });
+
+    async function bookAppointment(pilotId) {
+      const button = event.target;
+      button.classList.add('loading');
+      button.disabled = true;
+      try {
+        // Simulate API call (replace with actual endpoint)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        alert(`Appointment booked for Pilot ID ${pilotId}`);
+      } catch (error) {
+        alert('Error booking appointment.');
+      } finally {
+        button.classList.remove('loading');
+        button.disabled = false;
+      }
+    }
+
+    async function viewResult(pilotId) {
+      const button = event.target;
+      button.classList.add('loading');
+      button.disabled = true;
+      try {
+        // Simulate API call (replace with actual endpoint)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        alert(`Viewing results for Pilot ID ${pilotId}`);
+        // Optionally redirect to a results page: window.location.href = `/results?pilot=${pilotId}`;
+      } catch (error) {
+        alert('Error viewing results.');
+      } finally {
+        button.classList.remove('loading');
+        button.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

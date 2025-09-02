@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIRTUAERO - About</title>
+  <link rel="stylesheet" href="static/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* Animated Background Balls */
+    #animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+    .ball {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.6;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      animation: floatUp 6s linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) translateX(0) scale(1); }
+      50% { transform: translateY(50vh) translateX(calc(50vw * var(--direction))) scale(1.2); }
+      100% { transform: translateY(-10vh) translateX(calc(100vw * var(--direction))) scale(1); }
+    }
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 160px 30px 100px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(rgba(207, 159, 255, 0.2), rgba(95, 158, 160, 0.2));
+      animation: parallax 20s linear infinite;
+    }
+    @keyframes parallax {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 -200px; }
+    }
+    .hero h1 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 48px;
+      font-weight: bold;
+      color: #702963;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 30px;
+      line-height: 1.5;
+      border-bottom: 3px solid transparent;
+      animation: gradientBorder 3s infinite linear;
+    }
+    .hero p {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 20px;
+      color: #686868;
+      max-width: 900px;
+      margin: 30px auto;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeIn 1.2s ease-in-out 0.5s forwards;
+    }
+    .jet {
+      position: absolute;
+      bottom: 0;
+      left: -150px;
+      width: 250px;
+      height: 50px;
+      animation: takeoff 10s linear infinite;
+    }
+    .jet::before, .jet::after {
+      content: '';
+      position: absolute;
+    }
+    .jet::before {
+      width: 100px;
+      height: 20px;
+      background: #953553;
+      top: 15px;
+      left: 50px;
+      border-radius: 10px 0 0 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .jet::after {
+      width: 0;
+      height: 0;
+      border-left: 30px solid #702963;
+      border-top: 15px solid transparent;
+      border-bottom: 15px solid transparent;
+      left: 150px;
+      top: 10px;
+    }
+    @keyframes takeoff {
+      0% { transform: translate(-20vw, 15vh) rotate(0deg); }
+      100% { transform: translate(120vw, -10vh) rotate(35deg); }
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes gradientBorder {
+      0% { border-color: #702963; }
+      50% { border-color: #5F9EA0; }
+      100% { border-color: #953553; }
+    }
+    /* Mission Section */
+    .mission {
+      padding: 100px 30px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+ 
+    }
+    .mission h2 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 36px;
+      font-weight: bold;
+      color: #702963;
+      text-align: center;
+      margin-bottom: 40px;
+      line-height: 1.5;
+      position: relative;
+      overflow: hidden;
+    }
+    .mission h2::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, #702963, #5F9EA0);
+      animation: slideBorder 2s infinite alternate;
+    }
+    @keyframes slideBorder {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .timeline {
+      position: relative;
+      max-width: 1000px;
+      margin: 40px auto;
+    }
+    .timeline-item {
+      padding: 30px;
+      background: #fff;
+      border-radius: 12px;
+      margin: 30px 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateX(-50px);
+      animation: slideIn 0.8s ease-in-out forwards;
+      transition: all 0.3s;
+    }
+    .timeline-item:nth-child(1) { animation-delay: 0.2s; }
+    .timeline-item:nth-child(2) { animation-delay: 0.4s; }
+    .timeline-item:nth-child(3) { animation-delay: 0.6s; }
+    .timeline-item:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(112, 41, 99, 0.6);
+    }
+    .timeline-item h3 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 22px;
+      font-weight: bold;
+      color: #5F9EA0;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .timeline-item p {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 18px;
+      color: #686868;
+      line-height: 1.8;
+    }
+    @keyframes slideIn {
+      0% { opacity: 0; transform: translateX(-50px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    /* Team Section */
+    .team {
+      padding: 100px 30px;
+      text-align: center;
+      opacity: 0;
+      animation: fadeInSection 1s ease-in-out 0.2s forwards;
+    }
+    .team h2 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 36px;
+      font-weight: bold;
+      color: #702963;
+      margin-bottom: 40px;
+      line-height: 1.5;
+      position: relative;
+      overflow: hidden;
+    }
+    .team h2::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, #702963, #5F9EA0);
+      animation: slideBorder 2s infinite alternate;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1400px;
+      margin: 40px auto;
+    }
+    .team-card {
+      perspective: 1000px;
+      height: 340px;
+    }
+    .team-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .team-card:hover .team-card-inner {
+      transform: rotateY(180deg);
+    }
+    .team-card-front, .team-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+    }
+    .team-card-front {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .team-card-back {
+      transform: rotateY(180deg);
+      background: linear-gradient(135deg, #5F9EA0, #953553);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+    .team-card-placeholder {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      border: 3px solid #702963;
+      background: #CF9FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 40px;
+      font-weight: bold;
+      color: #702963;
+      transition: transform 0.3s;
+    }
+    .team-card:hover .team-card-placeholder {
+      transform: scale(1.1);
+    }
+    .team-card h3 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 20px;
+      font-weight: bold;
+      color: #702963;
+      margin: 15px 0 10px;
+      line-height: 1.5;
+    }
+    .team-card p {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 18px;
+      color: #686868;
+      margin: 0;
+      line-height: 1.8;
+    }
+    .pro-links i {
+      font-size: 22px;
+      margin: 15px 10px;
+      color: #953553;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 12px;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+    .pro-links i:hover {
+      color: #fff;
+      background: #5F9EA0;
+      transform: rotate(360deg);
+    }
+    /* Features Section */
+    .features {
+      padding: 100px 30px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      margin: 50px auto;
+      max-width: 1400px;
+      opacity: 0;
+      animation: fadeInSection 1s ease-in-out 0.4s forwards;
+    }
+    .features h2 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 36px;
+      font-weight: bold;
+      color: #702963;
+      text-align: center;
+      margin-bottom: 40px;
+      line-height: 1.5;
+      position: relative;
+      overflow: hidden;
+    }
+    .features h2::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, #702963, #5F9EA0);
+      animation: slideBorder 2s infinite alternate;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 30px;
+    }
+    .feature-box {
+      text-align: center;
+      padding: 30px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      animation: bounceIn 0.8s ease-in-out forwards;
+      transition: transform 0.3s;
+    }
+    .feature-box:nth-child(1) { animation-delay: 0.2s; }
+    .feature-box:nth-child(2) { animation-delay: 0.4s; }
+    .feature-box:nth-child(3) { animation-delay: 0.6s; }
+    .feature-box:hover {
+      transform: translateY(-10px);
+    }
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: scale(0.3); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .feature-box i {
+      font-size: 50px;
+      color: #5F9EA0;
+      margin-bottom: 25px;
+      transition: transform 0.3s;
+    }
+    .feature-box:hover i {
+      transform: scale(1.2);
+    }
+    .feature-box h3 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 20px;
+      font-weight: bold;
+      color: #702963;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .feature-box p {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 18px;
+      color: #686868;
+      line-height: 1.8;
+    }
+    /* Call to Action Section */
+    .cta {
+      padding: 100px 30px;
+      text-align: center;
+      opacity: 0;
+      animation: fadeInSection 1s ease-in-out 0.6s forwards;
+    }
+    .cta h2 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 36px;
+      font-weight: bold;
+      color: #702963;
+      margin-bottom: 40px;
+      line-height: 1.5;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta h2::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, #702963, #5F9EA0);
+      animation: slideBorder 2s infinite alternate;
+    }
+    .cta .form {
+      max-width: 700px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .cta input {
+      width: 90%;
+      padding: 15px;
+      margin: 15px 0;
+      border: 2px solid #5F9EA0;
+      border-radius: 8px;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 18px;
+      line-height: 1.5;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .cta input:focus {
+      border-color: #702963;
+      box-shadow: 0 0 10px rgba(112, 41, 99, 0.6);
+      animation: pulseInput 1s infinite;
+      outline: none;
+    }
+    @keyframes pulseInput {
+      0% { box-shadow: 0 0 10px rgba(112, 41, 99, 0.6); }
+      50% { box-shadow: 0 0 15px rgba(112, 41, 99, 0.8); }
+      100% { box-shadow: 0 0 10px rgba(112, 41, 99, 0.6); }
+    }
+    .cta button {
+      padding: 15px 50px;
+      background: #5F9EA0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, background 0.3s;
+      margin-top: 20px;
+    }
+    .cta button:hover {
+      transform: scale(1.1);
+      background: #953553;
+    }
+    .cta button.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #fff;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+    }
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+    .cta .error .form {
+      animation: shake 0.5s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      50% { transform: translateX(10px); }
+      75% { transform: translateX(-10px); }
+    }
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 40px 0;
+    }
+    .countdown div {
+      background: linear-gradient(135deg, #702963, #953553);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 20px;
+      min-width: 100px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s;
+      line-height: 1.5;
+    }
+    .countdown div:hover {
+      transform: scale(1.1);
+    }
+    /* Scroll-Triggered Animation */
+    @keyframes fadeInSection {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero { padding: 120px 20px 80px; }
+      .hero h1 { font-size: 36px; }
+      .hero p { font-size: 18px; }
+      .jet { width: 150px; height: 30px; }
+      .jet::before { width: 60px; height: 12px; top: 9px; left: 30px; }
+      .jet::after { border-left: 18px solid #702963; border-top: 9px solid transparent; border-bottom: 9px solid transparent; left: 90px; top: 6px; }
+      .mission, .features { padding: 80px 20px; margin: 30px auto; }
+      .mission h2, .team h2, .features h2, .cta h2 { font-size: 30px; }
+      .timeline-item { padding: 25px; margin: 20px 0; }
+      .team { padding: 80px 20px; }
+      .team-card { height: 360px; }
+      .team-card-placeholder { width: 100px; height: 100px; font-size: 30px; }
+      .team-card h3 { font-size: 18px; }
+      .team-card p, .team-card-back { font-size: 16px; }
+      .pro-links i { font-size: 20px; padding: 10px; }
+      .features { padding: 80px 20px; }
+      .feature-box i { font-size: 40px; }
+      .feature-box h3 { font-size: 18px; }
+      .feature-box p { font-size: 16px; }
+      .cta { padding: 80px 20px; }
+      .cta input { font-size: 16px; width: 95%; }
+      .cta button { font-size: 18px; padding: 12px 40px; }
+      .countdown div { font-size: 18px; min-width: 80px; padding: 15px; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 28px; }
+      .hero p { font-size: 16px; }
+      .jet { width: 100px; height: 20px; }
+      .jet::before { width: 40px; height: 8px; top: 6px; left: 20px; }
+      .jet::after { border-left: 12px solid #702963; border-top: 6px solid transparent; border-bottom: 6px solid transparent; left: 60px; top: 4px; }
+      .mission h2, .team h2, .features h2, .cta h2 { font-size: 26px; }
+      .timeline-item h3 { font-size: 20px; }
+      .team-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <img src="static/img/img1.png" class="logo" alt="Logo" />
+    <div class="hamburger-button" onclick="toggleMenu()">☰</div>
+    <div class="navigation" id="navbar">
+      <a href="/">Home</a>
+      <a href="/results">Results</a>
+      <a href="/Activities">Activities</a> 
+      <a href="/About" class="active">About</a> 
+    </div>
+  </nav>
+
+  <div id="animated-bg"></div>
+
+  <section class="hero">
+    <h1>Empowering Pilots with VIRTUAERO</h1><br>
+    <p>Revolutionizing Air Force training through cutting-edge VR simulations and AI-driven analytics.</p>
+    <div class="jet"></div>
+  </section>
+
+  <section class="mission">
+    <h2>Our Mission</h2><br>
+    <div class="timeline">
+      <div class="timeline-item">
+        <h3>2018: Founded</h3>
+        <p>VIRTUAERO was established to transform pilot training with immersive technology.</p>
+      </div>
+      <div class="timeline-item">
+        <h3>2020: First VR Simulator</h3>
+        <p>Launched our pioneering VR platform, adopted by top training academies.</p>
+      </div>
+      <div class="timeline-item">
+        <h3>2025: AI Integration</h3>
+        <p>Introduced AI-driven analytics for real-time performance insights.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="team">
+    <h2>Our Team</h2><br>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-card-inner">
+          <div class="team-card-front">
+            <div class="team-card-placeholder">EE</div>
+            <h3>Ema Ernik</h3>
+            <p>Aviation Strategy Consultant</p>
+            <div class="pro-links">
+              <i class="fab fa-facebook"></i>
+              <i class="fab fa-instagram"></i>
+              <i class="fab fa-linkedin-in"></i>
+            </div>
+          </div>
+          <div class="team-card-back">
+            <p>With over 15 years in aviation, Ema drives strategic innovation for VIRTUAERO’s training solutions.</p>
+          </div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-card-inner">
+          <div class="team-card-front">
+            <div class="team-card-placeholder">JC</div>
+            <h3>Jason Chua</h3>
+            <p>Pilot Training Advisor</p>
+            <div class="pro-links">
+              <i class="fab fa-facebook"></i>
+              <i class="fab fa-instagram"></i>
+              <i class="fab fa-linkedin-in"></i>
+            </div>
+          </div>
+          <div class="team-card-back">
+            <p>A former fighter pilot, Jason designs realistic training scenarios for optimal skill development.</p>
+          </div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-card-inner">
+          <div class="team-card-front">
+            <div class="team-card-placeholder">MH</div>
+            <h3>Maalik Halper</h3>
+            <p>VR Simulation Specialist</p>
+            <div class="pro-links">
+              <i class="fab fa-facebook"></i>
+              <i class="fab fa-instagram"></i>
+              <i class="fab fa-linkedin-in"></i>
+            </div>
+          </div>
+          <div class="team-card-back">
+            <p>Maalik’s expertise in VR technology creates immersive environments for pilot training.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <h2>Why Choose VIRTUAERO?</h2><br>
+    <div class="feature-grid">
+      <div class="feature-box">
+        <i class="fas fa-vr-cardboard"></i>
+        <h3>Immersive VR</h3>
+        <p>Experience lifelike simulations with dynamic weather and terrain.</p>
+      </div>
+      <div class="feature-box">
+        <i class="fas fa-brain"></i>
+        <h3>AI Analytics</h3>
+        <p>Real-time feedback to enhance pilot performance.</p>
+      </div>
+      <div class="feature-box">
+        <i class="fas fa-cogs"></i>
+        <h3>Custom Modules</h3>
+        <p>Tailored training to meet individual needs.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Join Our Community</h2><br>
+    <div class="form">
+      <input type="text" placeholder="Name" required>
+      <input type="email" placeholder="Email ID" required>
+      <input type="text" placeholder="Contact Number" required>
+      <button onclick="submitForm()">Submit</button>
+    </div>
+    <div class="countdown">
+      <div>18<br>Days</div>
+      <div>23<br>Hours</div>
+      <div>06<br>Minutes</div>
+      <div>58<br>Seconds</div>
+    </div>
+  </section>
+
+  <script src="static/js/script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const ballContainer = document.getElementById("animated-bg");
+      for (let i = 0; i < 15; i++) {
+        let ball = document.createElement("div");
+        ball.classList.add("ball");
+        let size = Math.random() * 50 + 10;
+        ball.style.width = `${size}px`;
+        ball.style.height = `${size}px`;
+        ball.style.left = `${Math.random() * 100}vw`;
+        ball.style.backgroundColor = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.8)`;
+        ball.style.animationDuration = `${Math.random() * 5 + 3}s`;
+        ball.style.setProperty('--direction', Math.random() > 0.5 ? '1' : '-1');
+        ballContainer.appendChild(ball);
+      }
+    });
+
+    function submitForm() {
+      const form = document.querySelector('.form');
+      const inputs = form.querySelectorAll('input');
+      const button = form.querySelector('button');
+      let valid = true;
+      inputs.forEach(input => {
+        if (!input.value) {
+          valid = false;
+          input.style.borderColor = '#ff0000';
+        } else {
+          input.style.borderColor = '#5F9EA0';
+        }
+      });
+      if (!valid) {
+        form.classList.add('error');
+        setTimeout(() => form.classList.remove('error'), 500);
+        alert('Please fill all fields.');
+      } else {
+        button.classList.add('loading');
+        setTimeout(() => {
+          button.classList.remove('loading');
+          alert('Form submitted successfully!');
+          inputs.forEach(input => (input.value = ''));
+        }, 1500);
+      }
+    }
+  </script>
+</body>
+</html>

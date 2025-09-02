@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VIRTUAERO - Pilot Success Rate Prediction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/styles.css" />
+  <style>
+    .form-container {
+      margin: 100px auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+      font-family: 'Roboto', sans-serif;
+    }
+    .form-container h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 28px;
+      color: #702963;
+      margin-bottom: 20px;
+      animation: glow 1.5s infinite alternate;
+    }
+    .form-group {
+      margin: 15px 0;
+      opacity: 0;
+      animation: fadeInInput 0.5s ease-in-out forwards;
+    }
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .form-group:nth-child(3) { animation-delay: 0.3s; }
+    .form-group:nth-child(4) { animation-delay: 0.4s; }
+    .form-group:nth-child(5) { animation-delay: 0.5s; }
+    .form-group:nth-child(6) { animation-delay: 0.6s; }
+    @keyframes fadeInInput {
+      0% { opacity: 0; transform: translateX(-20px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    .form-group label {
+      display: block;
+      font-size: 16px;
+      color: #953553;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+    .form-group input {
+      width: 80%;
+      padding: 10px;
+      border: 2px solid #5F9EA0;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: 'Roboto', sans-serif;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-group input:focus {
+      border-color: #702963;
+      box-shadow: 0 0 8px rgba(112, 41, 99, 0.5);
+      outline: none;
+    }
+    .predict-btn {
+      padding: 12px 30px;
+      background: #5F9EA0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.3s, background 0.3s;
+      position: relative;
+    }
+    .predict-btn:hover {
+      transform: scale(1.1);
+      background: #953553;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1.1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1.1); }
+    }
+    .predict-btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #fff;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+    }
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+    .result-container {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      display: none;
+      animation: slideUp 0.5s ease-in-out;
+      font-family: 'Roboto', sans-serif;
+    }
+    @keyframes slideUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .result-container h3 {
+      color: #702963;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+    .result-container ul {
+      list-style: none;
+      padding: 0;
+    }
+    .result-container li {
+      font-size: 16px;
+      color: #686868;
+      margin: 10px 0;
+      opacity: 0;
+      animation: fadeInRows 0.8s ease-in-out forwards;
+    }
+    .result-container li:nth-child(1) { animation-delay: 0.1s; }
+    .result-container li:nth-child(2) { animation-delay: 0.2s; }
+    .result-container li:nth-child(3) { animation-delay: 0.3s; }
+    .result-container li:nth-child(4) { animation-delay: 0.4s; }
+    .result-container li:nth-child(5) { animation-delay: 0.5s; }
+    #animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+    .ball {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      from {
+        transform: translateY(100vh) translateX(0);
+      }
+      to {
+        transform: translateY(-10vh) translateX(calc(100vw - 50px));
+      }
+    }
+    @media (max-width: 768px) {
+      .form-container {
+        width: 95%;
+        padding: 15px;
+      }
+      .form-container h2 {
+        font-size: 24px;
+      }
+      .form-group label {
+        font-size: 14px;
+      }
+      .form-group input {
+        font-size: 14px;
+      }
+      .predict-btn {
+        font-size: 16px;
+        padding: 10px 25px;
+      }
+      .result-container h3 {
+        font-size: 20px;
+      }
+      .result-container li {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <img src="static/img/img1.png" class="logo" alt="Logo" />
+    <div class="hamburger-button" onclick="toggleMenu()">☰</div>
+    <div class="navigation" id="navbar">
+      <a href="/">Home</a>
+      <a href="/results" class="active">Results</a>
+      <a href="/Activities">Activities</a> 
+      <a href="/About">About</a> 
+    </div>
+  </nav>
+
+  <div id="animated-bg"></div>
+  <div class="form-container"><br>
+    <h2>Pilot Success Rate Prediction</h2>
+    <br>
+    <div class="form-group">
+      <label for="heart-rate">Heart Rate (BPM)</label>
+      <input type="number" id="heart-rate" min="60" max="120" placeholder="e.g., 80" required>
+    </div>
+    <div class="form-group">
+      <label for="eye-tracking">Eye Tracking Accuracy (0-1)</label>
+      <input type="number" id="eye-tracking" step="0.01" min="0" max="1" placeholder="e.g., 0.85" required>
+    </div>
+    <div class="form-group">
+      <label for="reaction-time">Reaction Time (ms)</label>
+      <input type="number" id="reaction-time" min="100" max="500" placeholder="e.g., 250" required>
+    </div>
+    <div class="form-group">
+      <label for="flight-precision">Flight Control Precision (0-1)</label>
+      <input type="number" id="flight-precision" step="0.01" min="0" max="1" placeholder="e.g., 0.75" required>
+    </div>
+    <div class="form-group">
+      <label for="decision-speed">Decision Making Speed (s)</label>
+      <input type="number" id="decision-speed" step="0.01" min="0" max="5" placeholder="e.g., 1.5" required>
+    </div>
+    <div class="form-group">
+      <label for="error-rate">Error Rate (0-1)</label>
+      <input type="number" id="error-rate" step="0.01" min="0" max="1" placeholder="e.g., 0.1" required>
+    </div>
+    <button class="predict-btn" onclick="predictSuccessRate()">Predict</button>
+    <div class="result-container" id="result">
+      <h3 id="result-title"></h3>
+      <ul id="suggestions"></ul>
+    </div>
+  </div>
+
+  <script src="static/js/script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("DOM loaded, initializing animated background");
+      const ballContainer = document.getElementById("animated-bg");
+      for (let i = 0; i < 15; i++) {
+        let ball = document.createElement("div");
+        ball.classList.add("ball");
+        let size = Math.random() * 50 + 10;
+        ball.style.width = `${size}px`;
+        ball.style.height = `${size}px`;
+        ball.style.left = `${Math.random() * 100}vw`;
+        ball.style.backgroundColor = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.8)`;
+        ball.style.animationDuration = `${Math.random() * 5 + 3}s`;
+        ballContainer.appendChild(ball);
+      }
+    });
+
+    async function predictSuccessRate() {
+      console.log("predictSuccessRate called");
+      const heartRate = document.getElementById('heart-rate').value;
+      const eyeTracking = document.getElementById('eye-tracking').value;
+      const reactionTime = document.getElementById('reaction-time').value;
+      const flightPrecision = document.getElementById('flight-precision').value;
+      const decisionSpeed = document.getElementById('decision-speed').value;
+      const errorRate = document.getElementById('error-rate').value;
+
+      if (!heartRate || !eyeTracking || !reactionTime || !flightPrecision || !decisionSpeed || !errorRate) {
+        console.log("Validation failed: Missing fields");
+        alert('Please fill all fields.');
+        return;
+      }
+
+      const data = {
+        Heart_Rate: parseFloat(heartRate),
+        Eye_Tracking: parseFloat(eyeTracking),
+        Reaction_Time: parseFloat(reactionTime),
+        Flight_Precision: parseFloat(flightPrecision),
+        Decision_Speed: parseFloat(decisionSpeed),
+        Error_Rate: parseFloat(errorRate)
+      };
+      console.log("Sending data:", data);
+
+      const predictBtn = document.querySelector('.predict-btn');
+      predictBtn.classList.add('loading');
+      predictBtn.disabled = true;
+
+      try {
+        console.log("Sending fetch request to /predict");
+        const response = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        console.log("Response status:", response.status);
+        const result = await response.json();
+        console.log("Response data:", result);
+
+        if (!response.ok) {
+          console.log("Backend error:", result.error || "Unknown error");
+          if (result.error === "Model not loaded") {
+            alert("Prediction failed: The server could not load the model. Please contact the administrator.");
+          } else {
+            alert('Failed to submit data: ' + (result.error || `HTTP error: ${response.status}`));
+          }
+          return;
+        }
+
+        const resultContainer = document.getElementById('result');
+        const resultTitle = document.getElementById('result-title');
+        const suggestionsList = document.getElementById('suggestions');
+
+        resultTitle.innerText = `Success Rate: ${result.SuccessRate.toFixed(2)}%`;
+        suggestionsList.innerHTML = '';
+        result.Suggestions.forEach(suggestion => {
+          const li = document.createElement('li');
+          li.innerText = suggestion;
+          suggestionsList.appendChild(li);
+        });
+
+        resultContainer.style.display = 'block';
+        console.log("Prediction displayed successfully");
+      } catch (error) {
+        console.error('Fetch error:', error);
+        alert('Failed to submit data: ' + error.message);
+      } finally {
+        predictBtn.classList.remove('loading');
+        predictBtn.disabled = false;
+        console.log("Prediction attempt completed");
+      }
+    }
+  </script>
+</body>
+</html>
